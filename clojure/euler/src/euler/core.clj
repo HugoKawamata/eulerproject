@@ -145,6 +145,42 @@
       (recur (next-prime p) (inc i)))))
 
 
+(defn greatest-product
+  ;; PROBLEM 8
+  ;; Find the 13 consecutive digits with the greatest product from a string of digits
+  [s]
+  (loop [offs 0
+         bestoffs 0]
+    (if (> (+ offs 13) (count s))
+      bestoffs
+      (let [sub (subs s offs (+ offs 13))]
+        (let [prod (reduce * (map #(- % 48) (map int (seq sub))))]
+          (if (> prod bestoffs)
+            (recur (inc offs) prod)
+            (recur (inc offs) bestoffs)))))))
+
+(defn get-pythagorian-triplet
+  ;; Problem 9
+  ;; Get a pythagorian triplet with the sum x
+  [x]
+  (loop [a 998 b 1 c 1 binc 1 i 0]
+      (if (= (+ (* a a) (* b b)) (* c c))
+        (* a b c)
+        (if (< (inc i) binc)
+          (recur a (dec b) (inc c) binc (inc i))
+          (recur (dec a) (+ binc b) 1 (inc binc) 0)))))
+
+(defn sum-primes
+  ;; Problem 10
+  ;; Sum all primes below n
+  [n]
+  (loop [p 2
+         sum 0]
+    (if (< p n)
+      (recur (next-prime p) (+ sum p))
+      sum)))
+
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
