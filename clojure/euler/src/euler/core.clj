@@ -180,6 +180,62 @@
       (recur (next-prime p) (+ sum p))
       sum)))
 
+(defn triangles
+  ;; Get a lazy sequence of triangle numbers
+  ([] (triangles 1 1))
+  ([prev i] (cons prev (lazy-seq (triangles (+ prev i 1) (inc i))))))
+
+(defn get-factors
+  [n]
+  (loop [i 1
+         res []]
+    (if (> i n)
+      res
+      (if (zero? (mod n i))
+        (recur (inc i) (conj res i))
+        (recur (inc i) res)))))
+
+(defn count-factors
+  [n]
+  (loop [i 1
+    c 0]
+    (if (> i n)
+      c
+      (if (zero? (mod n i))
+        (recur (inc i) (inc c))
+        (recur (inc i) c)))))
+
+(defn get-lowest-triangle
+  ;; With > 500 factors
+  ;; Problem 12
+  [d]
+  (some #(and (> (count-factors %) d) %) (triangles)))
+
+(defn large-sum
+  [s]
+  (reduce + (map read-string (clojure.string/split s #"\n"))))
+
+(defn collatz-len
+  [n]
+  (loop [a n
+    iterations 1]
+    (if (= a 1)
+      [n iterations]
+      (if (even? a)
+        (recur (/ a 2) (inc iterations))
+        (recur (inc (* a 3)) (inc iterations))))))
+
+(defn longest-collatz
+  [lim]
+  (loop [i 1
+    longest [1 1]]
+    (if (> i lim)
+      longest
+      (let [cl (collatz-len i)]
+        (if (> (get cl 1) (get longest 1))
+          (recur (inc i) cl)
+          (recur (inc i) longest)
+          )))))
 
 (defn -main
   "I don't do a whole lot ... yet."
